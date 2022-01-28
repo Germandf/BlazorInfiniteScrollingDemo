@@ -20,11 +20,8 @@ else
 	private List<WeatherForecast> _forecasts = new();
 	private List<WeatherForecast> _mockedService = new();
 
-	protected override async Task OnInitializedAsync()
-	{
+	protected override async Task OnInitializedAsync() =>
 		_mockedService = await _forecastService.GetForecastAsync();
-		await FetchForecasts();
-	}
 
 	private async Task FetchForecasts()
 	{

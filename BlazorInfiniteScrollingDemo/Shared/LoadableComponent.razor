@@ -2,18 +2,18 @@
 {
     <div class="spinner-border @AdditionalCss" role="status"></div>
 }
-else
+else if (ChildContent is not null)
 {
     @ChildContent
 }
-
+    
 @code {
 
     [Parameter]
-    public RenderFragment ChildContent { get; set; }
+    public RenderFragment? ChildContent { get; set; }
     [Parameter]
     public bool IsLoading { get; set; }
     [Parameter]
-    public string AdditionalCss { get; set; }
+    public string AdditionalCss { get; set; } = "";
 
 }

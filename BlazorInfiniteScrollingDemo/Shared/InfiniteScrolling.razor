@@ -3,7 +3,10 @@
 @inject IIntersectionObserverService _observerService
 
 <Virtualize Items="Items" Context="item">
-	@ChildContent(item)
+	@if (ChildContent is not null)
+	{
+		@ChildContent(item)
+	}
 </Virtualize>
 <span @ref="_targetElement" class="p-2"></span>
 <LoadableComponent IsLoading="_isLoading" AdditionalCss="centered my-4" />
@@ -11,9 +14,9 @@
 @code {
 
 	[Parameter]
-	public RenderFragment<TItem> ChildContent { get; set; }
+	public RenderFragment<TItem>? ChildContent { get; set; }
 	[Parameter]
-	public ICollection<TItem> Items { get; set; }
+	public ICollection<TItem>? Items { get; set; }
 	[Parameter]
 	public EventCallback OnLoadingItems { get; set; }
 
