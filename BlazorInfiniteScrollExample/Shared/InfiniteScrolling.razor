@@ -1,10 +1,25 @@
 ﻿@inject IJSRuntime _js
-@ChildContent
+@typeparam TItem
+
+<ul>
+	<Virtualize Items="Items" Context="item">
+		@ChildContent(item)
+	</Virtualize>
+	<span id="observerTarget"></span>
+</ul>
+@if(_isLoading)
+{
+	<div class="text-center my-4">
+		<div class="spinner-border" role="status">
+			<span class="sr-only"></span>
+		</div>
+	</div>
+}
 
 @code {
 
 	[Parameter]
-	public RenderFragment ChildContent { get; set; }
+	public RenderFragment<TItem> ChildContent { get; set; }
 
 	[Parameter]
 	public string ObserverTargetId { get; set; }
@@ -12,7 +27,11 @@
 	[Parameter]
 	public EventCallback<bool> ObservableTargetReached { get; set; }
 
-	private DotNetObjectReference<InfiniteScrolling> _objectRef;
+	[Parameter]
+	public ICollection<TItem> Items { get; set; }
+
+	private DotNetObjectReference<InfiniteScrolling<TItem>> _objectRef;
+	private bool _isLoading = true;
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
@@ -26,7 +45,9 @@
 	[JSInvokable]
 	public async Task OnIntersection()
 	{
+		_isLoading = true;
 		await ObservableTargetReached.InvokeAsync(true);
+		_isLoading = false;
 	}
 
 }

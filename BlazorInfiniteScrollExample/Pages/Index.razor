@@ -10,23 +10,13 @@
 }
 else
 {
-	<InfiniteScrolling ObserverTargetId="observerTarget" ObservableTargetReached="(e) => FetchForecasts()">
-		<ul>
-			<Virtualize Items="_forecasts" Context="forecast">
-				<li class="list-group-item">@forecast.Id. @forecast.Date.ToShortDateString(): @(forecast.TemperatureC)° (@forecast.Summary)</li>
-			</Virtualize>
-			<span id="observerTarget"></span>
-		</ul>
-		
-		@if(_isLoading)
-		{
-			<div class="text-center my-4">
-				<div class="spinner-border" role="status">
-					<span class="sr-only"></span>
-				</div>
-			</div>
-			
-		}
+	<InfiniteScrolling	ObserverTargetId="observerTarget" 
+						ObservableTargetReached="(e) => FetchForecasts()" 
+						Items="_forecasts" 
+						Context="forecast">
+
+		<div class="list-group-item">@forecast.Id. @forecast.Date.ToShortDateString(): @(forecast.TemperatureC)° (@forecast.Summary)</div>
+
 	</InfiniteScrolling>
 }
 
