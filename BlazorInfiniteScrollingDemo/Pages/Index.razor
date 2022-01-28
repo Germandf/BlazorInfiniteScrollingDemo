@@ -26,7 +26,7 @@ else
 
 	private async Task FetchForecasts()
 	{
-		await Task.Delay(500);
+		await Task.Delay(1000);
 		var forecasts = _mockedService.Skip(_forecasts.Count).Take(40);
 		if (forecasts.Any())
 			_forecasts.AddRange(forecasts);

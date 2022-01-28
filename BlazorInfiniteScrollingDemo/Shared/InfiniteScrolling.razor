@@ -1,5 +1,4 @@
-﻿@using Ljbc1994.Blazor.IntersectionObserver;
-@typeparam TItem
+﻿@typeparam TItem
 @inject IIntersectionObserverService _observerService
 
 <Virtualize Items="Items" Context="item">
@@ -39,13 +38,14 @@
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
 		if (firstRender)
-			_observer = await _observerService.Observe(_targetElement, async (entries) => await OnIntersection());
+			_observer = await _observerService.Observe(_targetElement, async (entries) => await OnIntersection(entries));
 	}
 
-	public async Task OnIntersection()
+	public async Task OnIntersection(IList<IntersectionObserverEntry> entries)
 	{
 		_isLoading = true;
-		await OnLoadingItems.InvokeAsync();
+		if (entries.FirstOrDefault()!.IsIntersecting)
+			await OnLoadingItems.InvokeAsync();
 		_isLoading = false;
 		StateHasChanged();
 	}
