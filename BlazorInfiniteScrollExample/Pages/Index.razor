@@ -10,8 +10,7 @@
 }
 else
 {
-	<InfiniteScrolling	ObserverTargetId="observerTarget" 
-						ObservableTargetReached="(e) => FetchForecasts()" 
+	<InfiniteScrolling	ObservableTargetReached="FetchForecasts" 
 						Items="_forecasts" 
 						Context="forecast">
 

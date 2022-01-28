@@ -1,11 +1,12 @@
-﻿@inject IJSRuntime _js
+﻿@using Ljbc1994.Blazor.IntersectionObserver;
 @typeparam TItem
+@inject IIntersectionObserverService _observerService
 
-<ul>
+<ul class="m-0 p-0">
 	<Virtualize Items="Items" Context="item">
 		@ChildContent(item)
 	</Virtualize>
-	<span id="observerTarget"></span>
+	<span @ref="_targetElement" class="p-2"></span>
 </ul>
 @if(_isLoading)
 {
@@ -20,34 +21,34 @@
 
 	[Parameter]
 	public RenderFragment<TItem> ChildContent { get; set; }
-
 	[Parameter]
-	public string ObserverTargetId { get; set; }
-
-	[Parameter]
-	public EventCallback<bool> ObservableTargetReached { get; set; }
-
+	public EventCallback ObservableTargetReached { get; set; }
 	[Parameter]
 	public ICollection<TItem> Items { get; set; }
 
-	private DotNetObjectReference<InfiniteScrolling<TItem>> _objectRef;
+	private ElementReference _targetElement { get; set; }
 	private bool _isLoading = true;
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
 		if (firstRender)
-		{
-			_objectRef = DotNetObjectReference.Create(this);
-			var initResult = await _js.InvokeAsync<dynamic>("Observer.Initialize", _objectRef, ObserverTargetId);
-		}
+			await SetupObserver();
 	}
 
-	[JSInvokable]
 	public async Task OnIntersection()
 	{
 		_isLoading = true;
-		await ObservableTargetReached.InvokeAsync(true);
+		await ObservableTargetReached.InvokeAsync();
 		_isLoading = false;
+		StateHasChanged();
 	}
+
+	private async Task SetupObserver()
+    {
+        await _observerService.Observe(_targetElement, async (entries) =>
+        {
+			await OnIntersection();
+        });
+    }
 
 }

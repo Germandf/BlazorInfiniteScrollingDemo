@@ -10,7 +10,7 @@ namespace BlazorInfiniteScrollExample.Data
         public Task<List<WeatherForecast>> GetForecastAsync()
         {
             var weatherForecasts = new List<WeatherForecast>();
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 500; i++)
             {
                 weatherForecasts.Add(new()
                 {
