@@ -62,3 +62,16 @@ a, .btn-link {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+
+.spinner-border.centered {
+    display: flex;
+    justify-content: center;
+    margin: auto;
+}
+
+.spinner-border.spinner-border-md {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+/* SPINNER END */

@@ -2,7 +2,7 @@
 @using BlazorInfiniteScrollExample.Data
 @inject WeatherForecastService _forecastService
 
-<h1>Infinite Scroll</h1>
+<h1 class="text-center my-4">Infinite Scroll</h1>
 
 @if(_forecasts is null)
 {
@@ -10,12 +10,8 @@
 }
 else
 {
-	<InfiniteScrolling	ObservableTargetReached="FetchForecasts" 
-						Items="_forecasts" 
-						Context="forecast">
-
+	<InfiniteScrolling	Items="_forecasts" Context="forecast" OnLoadingItems="FetchForecasts">
 		<div class="list-group-item">@forecast.Id. @forecast.Date.ToShortDateString(): @(forecast.TemperatureC)° (@forecast.Summary)</div>
-
 	</InfiniteScrolling>
 }
 

@@ -2,29 +2,20 @@
 @typeparam TItem
 @inject IIntersectionObserverService _observerService
 
-<ul class="m-0 p-0">
-	<Virtualize Items="Items" Context="item">
-		@ChildContent(item)
-	</Virtualize>
-	<span @ref="_targetElement" class="p-2"></span>
-</ul>
-@if(_isLoading)
-{
-	<div class="text-center my-4">
-		<div class="spinner-border" role="status">
-			<span class="sr-only"></span>
-		</div>
-	</div>
-}
+<Virtualize Items="Items" Context="item">
+	@ChildContent(item)
+</Virtualize>
+<span @ref="_targetElement" class="p-2"></span>
+<LoadableComponent IsLoading="_isLoading" AdditionalCss="centered my-4" />
 
 @code {
 
 	[Parameter]
 	public RenderFragment<TItem> ChildContent { get; set; }
 	[Parameter]
-	public EventCallback ObservableTargetReached { get; set; }
-	[Parameter]
 	public ICollection<TItem> Items { get; set; }
+	[Parameter]
+	public EventCallback OnLoadingItems { get; set; }
 
 	private ElementReference _targetElement { get; set; }
 	private bool _isLoading = true;
@@ -38,17 +29,14 @@
 	public async Task OnIntersection()
 	{
 		_isLoading = true;
-		await ObservableTargetReached.InvokeAsync();
+		await OnLoadingItems.InvokeAsync();
 		_isLoading = false;
 		StateHasChanged();
 	}
 
-	private async Task SetupObserver()
+	private async Task SetupObserver() => await _observerService.Observe(_targetElement, async (entries) =>
     {
-        await _observerService.Observe(_targetElement, async (entries) =>
-        {
-			await OnIntersection();
-        });
-    }
-
+		await OnIntersection();
+    });
+    
 }
