@@ -19,14 +19,27 @@
 	public ICollection<TItem>? Items { get; set; }
 	[Parameter]
 	public EventCallback OnLoadingItems { get; set; }
+	[Parameter]
+	public bool RemainingItems 
+	{
+		get { return _remainingItems; }
+		set 
+		{
+			_remainingItems = value;
+			if (!_remainingItems && _observer is not null)
+				_observer.Unobserve(_targetElement);
+		}
+	}
 
 	private ElementReference _targetElement { get; set; }
+	private IntersectionObserver? _observer;
+	private bool _remainingItems = true;
 	private bool _isLoading = true;
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
 		if (firstRender)
-			await SetupObserver();
+			_observer = await _observerService.Observe(_targetElement, async (entries) => await OnIntersection());
 	}
 
 	public async Task OnIntersection()
@@ -37,9 +50,4 @@
 		StateHasChanged();
 	}
 
-	private async Task SetupObserver() => await _observerService.Observe(_targetElement, async (entries) =>
-    {
-		await OnIntersection();
-    });
-    
 }
