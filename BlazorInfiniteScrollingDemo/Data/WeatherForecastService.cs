@@ -1,4 +1,4 @@
-namespace BlazorInfiniteScrollExample.Data
+namespace BlazorInfiniteScrollingDemo.Data
 {
     public class WeatherForecastService
     {

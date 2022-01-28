@@ -8,7 +8,7 @@
     }
   },
   "profiles": {
-    "BlazorInfiniteScrollExample": {
+    "BlazorInfiniteScrollingDemo": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

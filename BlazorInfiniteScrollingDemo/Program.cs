@@ -1,4 +1,4 @@
-using BlazorInfiniteScrollExample.Data;
+using BlazorInfiniteScrollingDemo.Data;
 using Ljbc1994.Blazor.IntersectionObserver;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
