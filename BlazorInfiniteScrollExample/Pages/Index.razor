@@ -1,0 +1,53 @@
+﻿@page "/"
+@using BlazorInfiniteScrollExample.Data
+@inject WeatherForecastService _forecastService
+
+<h1>Infinite Scroll</h1>
+
+@if(_forecasts is null)
+{
+	<p>Loading...</p>
+}
+else
+{
+	<InfiniteScrolling ObserverTargetId="observerTarget" ObservableTargetReached="(e) => FetchForecasts()">
+		<ul>
+			<Virtualize Items="_forecasts" Context="forecast">
+				<li class="list-group-item">@forecast.Id. @forecast.Date.ToShortDateString(): @(forecast.TemperatureC)° (@forecast.Summary)</li>
+			</Virtualize>
+			<span id="observerTarget"></span>
+		</ul>
+		
+		@if(_isLoading)
+		{
+			<div class="text-center my-4">
+				<div class="spinner-border" role="status">
+					<span class="sr-only"></span>
+				</div>
+			</div>
+			
+		}
+	</InfiniteScrolling>
+}
+
+@code{
+
+	private List<WeatherForecast> _forecasts = new();
+	private List<WeatherForecast> _mockedService = new();
+	private bool _isLoading = true;
+
+	protected override async Task OnInitializedAsync()
+	{
+		_mockedService = await _forecastService.GetForecastAsync();
+		await FetchForecasts();
+	}
+
+	private async Task FetchForecasts()
+	{
+		_isLoading = true;
+		await Task.Delay(500);
+		_forecasts.AddRange(_mockedService.Skip(_forecasts.Count).Take(40));
+		_isLoading = false;
+	}
+
+}
