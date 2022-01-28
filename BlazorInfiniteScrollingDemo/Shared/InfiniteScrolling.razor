@@ -8,7 +8,14 @@
 	}
 </Virtualize>
 <span @ref="_targetElement" class="p-2"></span>
-<LoadableComponent IsLoading="_isLoading" AdditionalCss="centered my-4" />
+<LoadableComponent IsLoading="_isLoading" AdditionalCss="centered mt-2 mb-4">
+	@if (RemainingItems)
+	{
+		<div class="text-center mt-2 mb-4">
+			<button type="button" class="btn btn-dark" @onclick="async () => await OnIntersection()">Cargar más</button>
+		</div>
+	}
+</LoadableComponent>
 
 @code {
 
@@ -41,10 +48,10 @@
 			_observer = await _observerService.Observe(_targetElement, async (entries) => await OnIntersection(entries));
 	}
 
-	public async Task OnIntersection(IList<IntersectionObserverEntry> entries)
+	public async Task OnIntersection(IList<IntersectionObserverEntry>? entries = null)
 	{
 		_isLoading = true;
-		if (entries.FirstOrDefault()!.IsIntersecting)
+		if (entries is null || entries.FirstOrDefault()!.IsIntersecting)
 			await OnLoadingItems.InvokeAsync();
 		_isLoading = false;
 		StateHasChanged();
