@@ -4,16 +4,14 @@
 
 <h1 class="text-center my-4">Infinite Scrolling Demo</h1>
 
-@if(_forecasts is null)
-{
-	<p>Loading...</p>
-}
-else
-{
-	<InfiniteScrolling Items="_forecasts" Context="forecast" OnLoadingItems="FetchForecasts" RemainingItems="_remainingItems">
+<InfiniteScrolling Items="_forecasts" Context="forecast" OnLoadingItems="FetchForecasts" RemainingItems="_remainingItems">
+	<Item>
 		<div class="list-group-item">@forecast.Id. @forecast.Date.ToShortDateString(): @(forecast.TemperatureC)° (@forecast.Summary)</div>
-	</InfiniteScrolling>
-}
+	</Item>
+	<NotFound>
+		<div class="text-center">No hay datos disponibles.</div>
+	</NotFound>
+</InfiniteScrolling>
 
 @code{
 

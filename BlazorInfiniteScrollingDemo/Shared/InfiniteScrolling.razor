@@ -2,14 +2,18 @@
 @inject IIntersectionObserverService _observerService
 
 <Virtualize Items="Items" Context="item">
-	@if (ChildContent is not null)
+	@if (Item is not null)
 	{
-		@ChildContent(item)
+		@Item(item)
 	}
 </Virtualize>
 <span @ref="_targetElement" class="p-2"></span>
 <LoadableComponent IsLoading="_isLoading" AdditionalCss="centered mt-2 mb-4">
-	@if (RemainingItems)
+	@if(Items is null || !Items.Any())
+	{
+		@NotFound
+	}
+	else if (RemainingItems)
 	{
 		<div class="text-center mt-2 mb-4">
 			<button type="button" class="btn btn-dark" @onclick="async () => await OnIntersection()">Cargar más</button>
@@ -20,7 +24,9 @@
 @code {
 
 	[Parameter]
-	public RenderFragment<TItem>? ChildContent { get; set; }
+	public RenderFragment<TItem>? Item { get; set; }
+	[Parameter]
+	public RenderFragment? NotFound { get; set; }
 	[Parameter]
 	public ICollection<TItem>? Items { get; set; }
 	[Parameter]
@@ -48,7 +54,7 @@
 			_observer = await _observerService.Observe(_targetElement, async (entries) => await OnIntersection(entries));
 	}
 
-	public async Task OnIntersection(IList<IntersectionObserverEntry>? entries = null)
+	private async Task OnIntersection(IList<IntersectionObserverEntry>? entries = null)
 	{
 		_isLoading = true;
 		if (entries is null || entries.FirstOrDefault()!.IsIntersecting)
